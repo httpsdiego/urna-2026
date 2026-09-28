@@ -147,7 +147,8 @@ button, input { touch-action: manipulation; }
 
 .urna {
   display: grid;
-  grid-template-columns: 2.1fr 1fr;
+  /* minmax(0, …): um nome comprido na colinha não pode alargar o teclado e encolher a tela. */
+  grid-template-columns: minmax(0, 2.1fr) minmax(0, 1fr);
   gap: 18px;
   align-items: center;
   padding: 22px;
@@ -178,6 +179,7 @@ button, input { touch-action: manipulation; }
 }
 
 .urna-panel {
+  min-width: 0;
   background: var(--panel-bg);
   border-radius: 10px;
   padding: 16px;
@@ -651,7 +653,7 @@ kbd {
 }
 
 @media (max-width: 700px) {
-  .urna { grid-template-columns: 1fr; padding: 12px; gap: 12px; }
+  .urna { grid-template-columns: minmax(0, 1fr); padding: 12px; gap: 12px; }
   .urna-screen-wrap { padding: 6px; }
   .urna-screen { aspect-ratio: 4 / 3.6; }
   .urna-brand { display: none; }
