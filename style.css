@@ -419,12 +419,19 @@ button, input { touch-action: manipulation; }
 }
 .s-votou { position: absolute; right: 3cqw; bottom: 2.4cqw; font-size: 4cqw; color: #9a9a9a; }
 
-/* Tela estreita (celular): trilha compacta e textos maiores. */
+/* Tela estreita: trilha compacta. */
 @container (max-width: 520px) {
   .s-steps span:not(.current) { flex: 0 0 4.5cqw; font-size: 0; padding: 0; }
   .s-steps span.current { flex: 1; font-size: 3.2cqw; padding: 0.8cqw 2cqw 0.8cqw 3cqw; }
   .s-steps span { clip-path: polygon(0 0, calc(100% - 1.6cqw) 0, 100% 50%, calc(100% - 1.6cqw) 100%, 0 100%, 1.6cqw 50%); min-height: 5.6cqw; }
   .s-steps span:first-child { clip-path: polygon(0 0, calc(100% - 1.6cqw) 0, 100% 50%, calc(100% - 1.6cqw) 100%, 0 100%); }
+}
+
+/* Celular em pé: a tela da urna fica mais alta (4:3,6), então dá para aumentar
+   os textos. Na proporção normal (deitado, computador) eles não caberiam: o
+   senador com 2 suplentes invadia o rodapé. */
+@media (max-width: 700px) and (orientation: portrait), (max-width: 700px) and (min-height: 541px) {
+@container (max-width: 520px) {
   .s-status { font-size: 2.8cqw; margin-top: 0.6cqw; }
   .s-cargo { font-size: 5.4cqw; }
   .s-digit { width: 7cqw; height: 9cqw; font-size: 7cqw; }
@@ -440,6 +447,7 @@ button, input { touch-action: manipulation; }
   .s-photo.small .s-photo-img { width: 13cqw; }
   .s-photo-row .s-photo-img { width: 12cqw; }
   .s-photo figcaption { font-size: 2.6cqw; }
+}
 }
 
 /* ---------- Colinha ---------- */
