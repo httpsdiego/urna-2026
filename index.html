@@ -2,7 +2,16 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#eceae4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#17171a" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Urna 2026">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <title>Urna 2026 · Simulador</title>
   <meta name="description" content="Simulador não oficial de urna eletrônica para treinar o voto nas Eleições Gerais de 2026, com os candidatos registrados no TSE.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,7 +37,10 @@
     <section class="step-vote" id="step-vote" hidden>
       <div class="vote-bar">
         <span>Votando em <strong id="uf-name"></strong></span>
-        <button class="link-btn" id="change-uf">Trocar estado</button>
+        <span class="vote-bar-actions">
+          <button class="link-btn" id="fullscreen" type="button" hidden>Tela cheia</button>
+          <button class="link-btn" id="change-uf">Trocar estado</button>
+        </span>
       </div>
 
       <div class="vote-layout">

@@ -479,8 +479,61 @@
 
   $('restart').addEventListener('click', () => {
     startVoting();
-    $('step-vote').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showUrna();
   });
+
+  // ---------- Celular deitado: a urna ocupa a tela inteira ----------
+
+  const landscapePhone = window.matchMedia('(orientation: landscape) and (max-height: 540px)');
+  const isPhone = window.matchMedia('(pointer: coarse) and (max-width: 940px), (pointer: coarse) and (max-height: 540px)');
+
+  // Leva a urna (ou o passo de voto, em pé) para o topo da tela.
+  function showUrna(behavior = 'smooth') {
+    if ($('step-vote').hidden) return;
+    const target = landscapePhone.matches ? document.querySelector('.urna') : $('step-vote');
+    target.scrollIntoView({ behavior, block: 'start' });
+  }
+
+  landscapePhone.addEventListener('change', (e) => {
+    // Espera o navegador terminar de girar antes de rolar.
+    if (e.matches) setTimeout(() => showUrna('auto'), 250);
+  });
+
+  // Tela cheia + tela deitada onde o navegador deixa (Android). O Safari do
+  // iPhone não deixa nenhum dos dois: lá só dá pra pedir que a pessoa gire, e a
+  // tela cheia vem do "Adicionar à Tela de Início".
+  const root = document.documentElement;
+  const canFullscreen = document.fullscreenEnabled || document.webkitFullscreenEnabled;
+  const isFullscreen = () => document.fullscreenElement || document.webkitFullscreenElement;
+  const fsBtn = $('fullscreen');
+  fsBtn.hidden = !canFullscreen;
+
+  async function enterFullscreen() {
+    if (!canFullscreen || isFullscreen()) return;
+    const request = root.requestFullscreen || root.webkitRequestFullscreen;
+    try { await request.call(root, { navigationUI: 'hide' }); } catch { return; }
+    if (isPhone.matches) {
+      try { await screen.orientation.lock('landscape'); } catch { /* sem suporte */ }
+    }
+  }
+
+  // Ao entrar no simulador pelo celular: deita a tela sozinho, ou pede para girar.
+  function enterUrnaMode() {
+    if (!isPhone.matches || landscapePhone.matches) return;
+    if (canFullscreen) enterFullscreen();
+    else showToast('Gire o celular para ver a urna inteira na tela.');
+  }
+
+  fsBtn.addEventListener('click', () => {
+    if (isFullscreen()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    else enterFullscreen();
+  });
+  const syncFsBtn = () => {
+    fsBtn.textContent = isFullscreen() ? 'Sair da tela cheia' : 'Tela cheia';
+    setTimeout(() => showUrna('auto'), 250);
+  };
+  document.addEventListener('fullscreenchange', syncFsBtn);
+  document.addEventListener('webkitfullscreenchange', syncFsBtn);
 
   // ---------- Colinha / busca ----------
 
@@ -837,6 +890,7 @@
     if (!b) return;
     UrnaSound.unlock();
     const uf = b.dataset.uf;
+    enterUrnaMode(); // precisa rodar ainda dentro do toque, antes do await
     b.classList.add('is-loading');
     try {
       const data = await loadUf(uf);
@@ -852,7 +906,7 @@
       $('search-input').value = '';
       openSearch('federal');
       startVoting();
-      $('step-vote').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showUrna();
     } finally {
       b.classList.remove('is-loading');
     }
@@ -860,6 +914,7 @@
 
   $('change-uf').addEventListener('click', () => {
     state.cargos = [];
+    try { screen.orientation.unlock(); } catch { /* sem suporte */ }
     renderUfGrid();
     $('step-vote').hidden = true;
     $('step-uf').hidden = false;
