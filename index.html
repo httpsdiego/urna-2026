@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Urna 2026 · Simulador</title>
+  <meta name="description" content="Simulador não oficial de urna eletrônica para treinar o voto nas Eleições Gerais de 2026, com os candidatos registrados no TSE.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page">
+    <header class="intro">
+      <h1>Simulador de Urna · Eleições 2026</h1>
+      <p>Treine seu voto do 1º turno (4 de outubro) com os candidatos registrados no TSE, na mesma ordem da urna.</p>
+    </header>
+
+    <!-- Passo 1: estado -->
+    <section class="step-uf" id="step-uf">
+      <h2>Em qual estado você vota?</h2>
+      <p>Os candidatos a deputado, senador e governador mudam conforme o estado do seu título de eleitor.</p>
+      <div class="uf-grid" id="uf-grid"></div>
+    </section>
+
+    <!-- Passo 2 e 3: colinha + urna -->
+    <section class="step-vote" id="step-vote" hidden>
+      <div class="vote-bar">
+        <span>Votando em <strong id="uf-name"></strong></span>
+        <button class="link-btn" id="change-uf">Trocar estado</button>
+      </div>
+
+      <div class="vote-layout">
+        <section class="urna" aria-label="Urna eletrônica">
+          <div class="urna-screen-wrap">
+            <div class="urna-screen" id="screen"></div>
+            <p class="sr-only" id="sr-status" role="status" aria-live="polite"></p>
+          </div>
+
+          <div class="urna-panel">
+            <div class="urna-brand">
+              <span class="urna-brand-mark" aria-hidden="true"></span>
+              <span>SIMULADOR ELEITORAL</span>
+            </div>
+            <div class="colinha-hint" id="colinha-hint" aria-live="polite"></div>
+            <div class="keypad" id="keypad">
+              <button class="key" data-key="1">1</button>
+              <button class="key" data-key="2">2</button>
+              <button class="key" data-key="3">3</button>
+              <button class="key" data-key="4">4</button>
+              <button class="key" data-key="5">5</button>
+              <button class="key" data-key="6">6</button>
+              <button class="key" data-key="7">7</button>
+              <button class="key" data-key="8">8</button>
+              <button class="key" data-key="9">9</button>
+              <button class="key key-zero" data-key="0">0</button>
+              <div class="action-keys">
+                <button class="key-action key-branco" data-key="branco">BRANCO</button>
+                <button class="key-action key-corrige" data-key="corrige">CORRIGE</button>
+                <button class="key-action key-confirma" data-key="confirma">CONFIRMA</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="colinha" aria-label="Colinha eleitoral">
+          <div class="colinha-head">
+            <h2>Colinha</h2>
+            <button class="clear-btn" id="clear-colinha" type="button">Limpar</button>
+          </div>
+          <p class="colinha-help">Digite o número de cada cargo e confira o nome, ou busque abaixo pelo nome ou partido.</p>
+          <ol class="colinha-list" id="colinha-list"></ol>
+          <div class="export">
+            <span class="export-label">Exportar</span>
+            <button class="export-btn" id="export-png">Imagem</button>
+            <button class="export-btn" id="export-print">Imprimir / PDF</button>
+            <button class="export-btn" id="export-text">Copiar texto</button>
+          </div>
+          <div class="search">
+            <div class="search-tabs" id="search-tabs" role="tablist"></div>
+            <input type="search" id="search-input" placeholder="Nome, número ou partido" autocomplete="off">
+            <ul class="search-results" id="search-results"></ul>
+          </div>
+        </aside>
+      </div>
+
+      <p class="hint">Teclado também funciona: números, <kbd>Backspace</kbd> = Corrige, <kbd>Enter</kbd> = Confirma, <kbd>B</kbd> = Branco.</p>
+
+      <section class="receipt" id="receipt" hidden>
+        <h2>Resumo do voto simulado</h2>
+        <ol id="receipt-list"></ol>
+        <button class="restart" id="restart">Votar de novo</button>
+      </section>
+    </section>
+
+    <footer class="disclaimer">
+      Simulador <strong>não oficial</strong>, só para treino. Nenhum voto é registrado ou enviado.
+      Candidaturas conforme os registros no TSE (compilados pelo Nexo Jornal, atualizados em 27/09/2026); candidaturas indeferidas ou retiradas não aparecem.
+      Sons reproduzidos com os mesmos parâmetros do <a href="https://www.tse.jus.br/eleicoes/simulador-de-votacao" target="_blank" rel="noopener">simulador oficial do TSE</a>, que é a referência para o treino oficial.
+    </footer>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <div id="print-sheet" class="print-sheet"></div>
+
+  <script src="data/BR.js"></script>
+  <script src="sounds.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
